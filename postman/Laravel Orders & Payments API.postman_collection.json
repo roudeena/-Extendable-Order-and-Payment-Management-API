@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "c13965b2-3fbb-422f-802e-f7793da7b465",
+    "_postman_id": "c79c3213-4cc1-42ba-8bdd-07d24578f518",
     "name": "Laravel Orders & Payments API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "30090717"
@@ -24,25 +24,59 @@
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/register",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/register",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "register"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "",
+                  "    if (json.access_token) {",
+                  "        pm.environment.set(\"token\", json.access_token);",
+                  "        console.log(\"Token saved:\", json.access_token);",
+                  "    } else {",
+                  "        console.warn(\"access_token not found in response\", json);",
+                  "    }",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -56,25 +90,36 @@
               "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/login",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/login",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "login"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  }\n}"
+            }
+          ]
         },
         {
-          "name": "Get Me",
+          "name": "Get Authenticated User",
           "request": {
             "method": "GET",
             "header": [
@@ -84,22 +129,33 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/me",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/me",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "me"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\"\n}"
+            }
+          ]
         },
         {
           "name": "Logout",
@@ -108,26 +164,37 @@
             "header": [
               {
                 "key": "Authorization",
-                "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzY5OTAxNTgxLCJleHAiOjE3Njk5MDUxODEsIm5iZiI6MTc2OTkwMTU4MSwianRpIjoibmF1YWdtUWlHZ1hjM1M2aiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.UlzA8DGmVM7niSKOJwsQ173Qq76tUidwtRZS32Hn0XM"
+                "value": "Bearer {{token}}"
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/logout",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/logout",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "logout"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Logged out successfully\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -145,22 +212,33 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/orders",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/orders",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "orders"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"status\": \"pending\",\n      \"total\": 200,\n      \"created_at\": \"2026-02-03\"\n    }\n  ]\n}"
+            }
+          ]
         },
         {
           "name": "Create Order",
@@ -181,25 +259,36 @@
               "raw": "{\n  \"items\": [\n    {\"product_name\": \"Product A\", \"quantity\": 2, \"price\": 50},\n    {\"product_name\": \"Product B\", \"quantity\": 1, \"price\": 100}\n  ]\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/orders",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/orders",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "orders"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Order created successfully\",\n  \"order\": {\n    \"id\": 1,\n    \"status\": \"pending\",\n    \"total\": 200\n  }\n}"
+            }
+          ]
         },
         {
-          "name": "Get Single Order",
+          "name": "Get Order by ID",
           "request": {
             "method": "GET",
             "header": [
@@ -209,15 +298,10 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/orders/1",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/orders/1",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "orders",
@@ -225,7 +309,23 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"status\": \"pending\",\n  \"total\": 200,\n  \"items\": [\n    {\"product_name\": \"Product A\", \"quantity\": 2, \"price\": 50}\n  ]\n}"
+            }
+          ]
         },
         {
           "name": "Update Order",
@@ -246,23 +346,34 @@
               "raw": "{\n  \"status\": \"confirmed\",\n  \"items\": [\n    {\"product_name\": \"Product A\", \"quantity\": 3, \"price\": 50}\n  ]\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/orders/3",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/orders/1",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "orders",
-                "3"
+                "1"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Order updated successfully\",\n  \"order\": {\n    \"id\": 1,\n    \"status\": \"confirmed\",\n    \"total\": 150\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Order",
@@ -275,15 +386,10 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/orders/1",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/orders/1",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "orders",
@@ -291,7 +397,23 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Order deleted successfully\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -314,25 +436,36 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"order_id\": 5,\n  \"payment_method\": \"credit_card\"\n}"
+              "raw": "{\n  \"order_id\": 1,\n  \"payment_method\": \"credit_card\"\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/payments",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/payments",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "payments"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Payment processed successfully\",\n  \"payment\": {\n    \"id\": 1,\n    \"order_id\": 1,\n    \"method\": \"credit_card\",\n    \"status\": \"completed\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Process Payment (PayPal)",
@@ -350,25 +483,36 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"order_id\": 4,\n  \"payment_method\": \"paypal\"\n}"
+              "raw": "{\n  \"order_id\": 1,\n  \"payment_method\": \"paypal\"\n}"
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/payments",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/payments",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "payments"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Payment processed successfully\",\n  \"payment\": {\n    \"id\": 2,\n    \"order_id\": 1,\n    \"method\": \"paypal\",\n    \"status\": \"completed\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "List All Payments",
@@ -381,25 +525,36 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/payments",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/payments",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "payments"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"order_id\": 1,\n      \"method\": \"credit_card\",\n      \"status\": \"completed\"\n    }\n  ]\n}"
+            }
+          ]
         },
         {
-          "name": "Payments for Order",
+          "name": "Get Payments for Order",
           "request": {
             "method": "GET",
             "header": [
@@ -409,436 +564,43 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/payments/5",
-              "protocol": "http",
+              "raw": "{{base_url}}/api/payments/1",
               "host": [
-                "127",
-                "0",
-                "0",
-                "1"
+                "{{base_url}}"
               ],
-              "port": "8000",
               "path": [
                 "api",
                 "payments",
-                "5"
+                "1"
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "header": [],
+                "url": {
+                  "raw": ""
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"order_id\": 1,\n  \"payments\": [\n    {\n      \"id\": 1,\n      \"method\": \"credit_card\",\n      \"status\": \"completed\"\n    }\n  ]\n}"
+            }
+          ]
         }
       ]
-    },
-    {
-      "name": "Register",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"John Doe\",\r\n  \"email\": \"john@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\"\r\n}\r\n",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/register",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "register"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Login",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/login",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "login"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Me",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzY5OTAxNjU0LCJleHAiOjE3Njk5MDUyNTQsIm5iZiI6MTc2OTkwMTY1NCwianRpIjoiUnJMYU9yTDJZckpNaHZNYiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.0I79SFOd0zTmiJSPHWaX8I5kNGDodBKquzrC5gXkeQs"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/me",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "me"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Logout",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzY5OTAxNTgxLCJleHAiOjE3Njk5MDUxODEsIm5iZiI6MTc2OTkwMTU4MSwianRpIjoibmF1YWdtUWlHZ1hjM1M2aiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.UlzA8DGmVM7niSKOJwsQ173Qq76tUidwtRZS32Hn0XM"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/logout",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "logout"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "List Orders",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/orders",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "orders"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Create Order",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"items\": [\n    {\"product_name\": \"Product A\", \"quantity\": 2, \"price\": 50},\n    {\"product_name\": \"Product B\", \"quantity\": 1, \"price\": 100}\n  ]\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/orders",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "orders"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Get Single Order",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/orders/3",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "orders",
-            "3"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Update Order",
-      "request": {
-        "method": "PUT",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"status\": \"confirmed\",\n  \"items\": [\n    {\"product_name\": \"Product A\", \"quantity\": 3, \"price\": 50}\n  ]\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/orders/4",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "orders",
-            "4"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Delete Order",
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/orders/3",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "orders",
-            "3"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Process Payment (Credit Card)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"order_id\": 5,\n  \"payment_method\": \"credit_card\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/payments",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "payments"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Process Payment (PayPal)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          },
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"order_id\": 4,\n  \"payment_method\": \"paypal\"\n}"
-        },
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/payments",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "payments"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "List All Payments",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/payments",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "payments"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Payments for Order",
-      "request": {
-        "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "http://127.0.0.1:8000/api/payments/5",
-          "protocol": "http",
-          "host": [
-            "127",
-            "0",
-            "0",
-            "1"
-          ],
-          "port": "8000",
-          "path": [
-            "api",
-            "payments",
-            "5"
-          ]
-        }
-      },
-      "response": []
     }
   ],
   "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
     {
       "key": "token",
       "value": ""
