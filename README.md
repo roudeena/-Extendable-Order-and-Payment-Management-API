@@ -193,64 +193,52 @@ Authorization: Bearer {{token}}
 }
 ```
 
-💳 Payment Gateway Extensibility
+## 💳 Payment Gateway Extensibility
 
-The API uses a flexible and maintainable system to handle multiple payment methods without modifying controllers or core logic.
+The API uses a **flexible and maintainable system** to handle multiple payment methods without modifying controllers or core logic.
 
-Architecture
+### Architecture
 
-PaymentGatewayInterface
+1. **PaymentGatewayInterface**  
+   - Defines a standard `pay()` method that all gateways must implement:
+   ```php
+   public function pay(Order $order, array $data): array;
+   ```
+   - Ensures **consistent responses** across different payment methods.
 
-Defines a standard pay() method that all gateways must implement:
+2. **Gateway Implementations**  
+   - `CreditCardGateway` handles credit card payments:
+     ```php
+     'payment_id' => 'CC' . time(),
+     'status' => 'successful',
+     ```
+   - `PayPalGateway` handles PayPal payments:
+     ```php
+     'payment_id' => 'PP' . time(),
+     'status' => 'successful',
+     ```
+   - Each gateway encapsulates its **provider-specific logic**.
 
-public function pay(Order $order, array $data): array;
+3. **PaymentGatewayFactory**  
+   - Dynamically selects the appropriate gateway:
+   ```php
+   $gateway = PaymentGatewayFactory::make('paypal');
+   $response = $gateway->pay($order, $data);
+   ```
+   - Adding new gateways only requires creating a new class implementing `PaymentGatewayInterface` and registering it in the factory.
 
+### How to Add a New Payment Method
 
-Ensures consistent responses across different payment methods.
+1. Create a new class implementing `PaymentGatewayInterface`.  
+2. Add a case in `PaymentGatewayFactory::make()` for the new method.  
+3. No changes needed in controllers or models.
 
-Gateway Implementations
+### Benefits
 
-CreditCardGateway handles credit card payments:
-
-'payment_id' => 'CC' . time(),
-'status' => 'successful',
-
-
-PayPalGateway handles PayPal payments:
-
-'payment_id' => 'PP' . time(),
-'status' => 'successful',
-
-
-Each gateway encapsulates its provider-specific logic.
-
-PaymentGatewayFactory
-
-Dynamically selects the appropriate gateway:
-
-$gateway = PaymentGatewayFactory::make('paypal');
-$response = $gateway->pay($order, $data);
-
-
-Adding new gateways only requires creating a new class implementing PaymentGatewayInterface and registering it in the factory.
-
-How to Add a New Payment Method
-
-Create a new class implementing PaymentGatewayInterface.
-
-Add a case in PaymentGatewayFactory::make() for the new method.
-
-Done! No changes needed in controllers or models.
-
-Benefits
-
-✅ Extensible: Add new gateways without touching existing code
-
-✅ Consistent: All gateways return the same response structure
-
-✅ Testable: Each gateway can be tested independently
-
-✅ Follows SOLID principles (Open/Closed, Interface Segregation)
+- ✅ Extensible: Add new gateways without touching existing code  
+- ✅ Consistent: All gateways return the same response structure  
+- ✅ Testable: Each gateway can be tested independently  
+- ✅ Follows SOLID principles (Open/Closed, Interface Segregation)
 
 ---
 
