@@ -28,7 +28,7 @@ A professional RESTful API built with Laravel for managing user authentication, 
 1. **Clone the repository**
 ```bash
 git clone https://github.com/roudeena/laravel-orders-payments-api.git
-cd your-repo-name
+cd laravel-orders-payments-api
 ```
 
 2. **Install dependencies**
@@ -192,6 +192,65 @@ Authorization: Bearer {{token}}
   "paid_at": "2026-02-03T11:00:00Z"
 }
 ```
+
+💳 Payment Gateway Extensibility
+
+The API uses a flexible and maintainable system to handle multiple payment methods without modifying controllers or core logic.
+
+Architecture
+
+PaymentGatewayInterface
+
+Defines a standard pay() method that all gateways must implement:
+
+public function pay(Order $order, array $data): array;
+
+
+Ensures consistent responses across different payment methods.
+
+Gateway Implementations
+
+CreditCardGateway handles credit card payments:
+
+'payment_id' => 'CC' . time(),
+'status' => 'successful',
+
+
+PayPalGateway handles PayPal payments:
+
+'payment_id' => 'PP' . time(),
+'status' => 'successful',
+
+
+Each gateway encapsulates its provider-specific logic.
+
+PaymentGatewayFactory
+
+Dynamically selects the appropriate gateway:
+
+$gateway = PaymentGatewayFactory::make('paypal');
+$response = $gateway->pay($order, $data);
+
+
+Adding new gateways only requires creating a new class implementing PaymentGatewayInterface and registering it in the factory.
+
+How to Add a New Payment Method
+
+Create a new class implementing PaymentGatewayInterface.
+
+Add a case in PaymentGatewayFactory::make() for the new method.
+
+Done! No changes needed in controllers or models.
+
+Benefits
+
+✅ Extensible: Add new gateways without touching existing code
+
+✅ Consistent: All gateways return the same response structure
+
+✅ Testable: Each gateway can be tested independently
+
+✅ Follows SOLID principles (Open/Closed, Interface Segregation)
 
 ---
 
