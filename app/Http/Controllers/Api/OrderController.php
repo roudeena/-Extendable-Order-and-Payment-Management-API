@@ -53,7 +53,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Order created', 'order' => $order], 201);
+        return response()->json(['message' => 'Order created', 'order' => $order->load('items')], 201);
     }
 
     // Show single order
